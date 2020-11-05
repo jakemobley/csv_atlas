@@ -1,6 +1,14 @@
 {% extends 'layout.html' %}
 {% block body %}
-
-YOOOOOOO
-
+<h1>List of CSV Files</h1>
+(click to download)
+<ul>
+    {% for file in files %}
+    <li>
+        <a href="{{ (request.path + '/' if request.path != '/' else '') + file }}">
+            {{ (request.path + '/' if request.path != '/' else '') + file }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
 {% endblock %}
