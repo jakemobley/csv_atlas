@@ -3,9 +3,9 @@ Basic skeleton to save time on new projects.
 
 ## GETTING STARTED
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+These instructions will get you a copy of the project up and running locally.
 
-This assumes you have python3 and pip already installed on your machine.
+dependencies are python3 and pip.
 
 ### Clone repository to desired location
 ```
@@ -14,15 +14,17 @@ git clone https://github.com/jakemobley/flask-template.git
 
 ### Setup virtual environment
 
-I recommend using a virtual environment. Lately for basic projects I have been using pipenv since it doesn't require naming or frequent sourcing. You can see the Pipfile and Pipfile.lock are included in the repo.
+Lately for basic projects I have been using pipenv since it doesn't require naming or frequent sourcing, but venv is sometimes easier.
 ```
-pip install pipenv
+python -m venv whatever_env
 ```
+Don't forget to activate.
+
 From there you can check out this resource for some common setup items: https://docs.python-guide.org/dev/virtualenvs/ or just use whatever virtual environment you want.
 
 ### Install Flask (if not using pipenv just pip install)
 ```
-pipenv install flask
+pip install flask
 ```
 
 ### Initialize Flask development server if you want
