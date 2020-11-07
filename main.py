@@ -7,6 +7,7 @@ import config
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = Path(config.FILE_DIR)
+app.secret_key = config.SECRET_KEY
 
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in config.ALLOWED_EXTENSIONS
