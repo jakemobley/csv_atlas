@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+{% block body %}
+<center>
+    <div>
+        <h1>{{file}}</h1>
+        <a href="{{ '/download/' + file }}">
+            <input type="submit" name=download value=Download>
+        </a> <br>
+        <a href="{{ '/display/' + file }}">
+            <input type="submit" name=display value=Display>
+        </a>
+    </div>
+</center>
+{% endblock %}

@@ -15,10 +15,32 @@ def allowed_file(filename):
 
 
 @app.route('/')
-def file_list():
+def file_landing():
 	# Show directory contents
 	files = os.listdir(config.FILE_DIR)
 	return render_template('file_list.html', files=files)
+
+
+@app.route('/<file>')
+def file_list(file):
+	# Return 404 if path doesn't exist
+	if not os.path.exists(config.FILE_DIR):
+		return abort(412, "problem with file directory")
+	if file not in os.listdir(config.FILE_DIR):
+		return redirect(url_for('file_list'))  # add custom error handlers
+	return render_template('actions.html', file=file)
+
+
+@app.route('/download/<file>')
+def download_file(file):
+	# Return 404 if path doesn't exist
+	if not os.path.exists(config.FILE_DIR):
+		return abort(412, "problem with file directory")
+	if file not in os.listdir(config.FILE_DIR):
+		return redirect(url_for('file_list'))  # add custom error handlers
+	# create df to display
+	full_filepath = Path(f"{config.FILE_DIR}/{file}")
+	return send_file(full_filepath)
 
 
 @app.route('/display/<file>')
@@ -34,12 +56,6 @@ def display_file(file):
 	html_df = df.to_html()
 	shape = df.shape
 	return render_template('file.html', file=file, shape=df.shape, table=html_df)
-
-
-"""
-		# Check if path is a file and serve
-		if os.path.isfile(abs_path):
-			return send_file(abs_path)"""
 
 
 @app.route('/upload', methods=['GET', 'POST'])
