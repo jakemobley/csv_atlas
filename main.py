@@ -1,5 +1,5 @@
 import os
-from flask import Flask, flash, request, redirect, url_for, render_template, send_file, abort
+from flask import Flask, flash, request, redirect, url_for, render_template, send_file, abort, redirect
 from werkzeug.utils import secure_filename
 from pathlib import Path
 import pandas as pd
@@ -9,31 +9,32 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = Path(config.FILE_DIR)
 app.secret_key = config.SECRET_KEY
 
+
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in config.ALLOWED_EXTENSIONS
 
 
 @app.route('/')
-def display():
-	file = Path(f"{config.FILE_DIR}/example.csv")
-	df = pd.read_csv(request.files.get(file))
-	return render_template('index.html', shape=df.shape)
+def file_list():
+	# Show directory contents
+	files = os.listdir(config.FILE_DIR)
+	return render_template('file_list.html', files=files)
 
 
-@app.route('/files/<file>')
-def dir_listing(file):
-	file_dir = Path(config.FILE_DIR)
+@app.route('/display/<file>')
+def display_file(file):
 	# Return 404 if path doesn't exist
-	if not os.path.exists(file_dir):
-		return abort(404, "problem with file directory")
+	if not os.path.exists(config.FILE_DIR):
+		return abort(412, "problem with file directory")
+	if file not in os.listdir(config.FILE_DIR):
+		return redirect(url_for('file_list'))  # add custom error handlers
+	# create df to display
+	full_filepath = Path(f"{config.FILE_DIR}/{file}")
+	df = pd.read_csv(full_filepath)
+	html_df = df.to_html()
+	shape = df.shape
+	return render_template('file.html', file=file, shape=df.shape, table=html_df)
 
-	if file:
-		return render_template('file.html', file=file)
-
-	else:
-		# Show directory contents
-		files = os.listdir(file_dir)
-		return render_template('file_list.html', files=files)
 
 """
 		# Check if path is a file and serve
