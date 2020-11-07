@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% block body %}
+<center>
+<div>
+    <h1>List of CSV Files</h1>
+<ul style="list-style-type:none;">
+    {% for file in files %}
+    <li>
+        <a href="{{ (request.path + '/' if request.path != '/' else '') + file }}">
+            <input type="submit" name=download value={{file}}>
+        </a>
+    </li>
+</ul>
+</div>
+</center>
+    {% endfor %}
+{% endblock %}

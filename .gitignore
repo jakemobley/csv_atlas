@@ -1,4 +1,5 @@
 .installed.cfg
+config.py
 bin
 develop-eggs
 dist

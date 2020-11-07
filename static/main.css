@@ -1,3 +1,22 @@
+body {
+    background: #040522;
+}
+
+h1 {
+    color: #3ddeed;
+    font-variant-caps: all-small-caps;
+    font-size: 46px;
+}
+
+h3 {
+  color: #3ddeed;
+  font-size: 36px;
+
+li {
+  color: #3ddeed;
+  font-size: 50px;
+}
+
 p {
-	color: orange;
+  color: #3ddeed;
 }

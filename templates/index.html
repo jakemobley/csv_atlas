@@ -1,14 +1,11 @@
-{% extends 'layout.html' %}
-{% block body %}
-<h1>List of CSV Files</h1>
-(click to download)
-<ul>
-    {% for file in files %}
-    <li>
-        <a href="{{ (request.path + '/' if request.path != '/' else '') + file }}">
-            {{ (request.path + '/' if request.path != '/' else '') + file }}
-        </a>
-    </li>
-    {% endfor %}
-</ul>
-{% endblock %}
+<html>
+  <head>
+    <title>yo</title>
+      <link rel="stylesheet" href="/static/main.css">
+  </head>
+  <body>
+  <center>
+      Shape is: {{ shape }}
+  </center>
+  </body>
+</html>

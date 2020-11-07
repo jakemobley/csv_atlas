@@ -1,38 +1,43 @@
 import os
-from flask import Flask, flash, request, redirect, url_for, render_template, send_file
+from flask import Flask, flash, request, redirect, url_for, render_template, send_file, abort
 from werkzeug.utils import secure_filename
 from pathlib import Path
-
-FILE_DIR = r"C:\Users\jakem\projects\web-dev\csv_atlas\csv_atlas\uploaded_files"
-ALLOWED_EXTENSIONS = {'csv'}
+import pandas as pd
+import config
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = FILE_DIR
-
+app.config['UPLOAD_FOLDER'] = Path(config.FILE_DIR)
 
 def allowed_file(filename):
-	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+	return '.' in filename and filename.rsplit('.', 1)[1].lower() in config.ALLOWED_EXTENSIONS
 
 
 @app.route('/')
-def dir_listing():
+def display():
+	file = Path(f"{config.FILE_DIR}/example.csv")
+	df = pd.read_csv(request.files.get(file))
+	return render_template('index.html', shape=df.shape)
 
-	# Joining the base and the requested path
-	abs_path = FILE_DIR
 
+@app.route('/files/<file>')
+def dir_listing(file):
+	file_dir = Path(config.FILE_DIR)
 	# Return 404 if path doesn't exist
-	if not os.path.exists(abs_path):
+	if not os.path.exists(file_dir):
 		return abort(404, "problem with file directory")
 
-	"""
-	# Check if path is a file and serve
-	if os.path.isfile(abs_path):
-		return send_file(abs_path)
-	"""
+	if file:
+		return render_template('file.html', file=file)
 
-	# Show directory contents
-	files = os.listdir(abs_path)
-	return render_template('index.html', files=files)
+	else:
+		# Show directory contents
+		files = os.listdir(file_dir)
+		return render_template('file_list.html', files=files)
+
+"""
+		# Check if path is a file and serve
+		if os.path.isfile(abs_path):
+			return send_file(abs_path)"""
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -41,7 +46,6 @@ def upload_file():
 		# check if the post request has the file part
 		if 'file' not in request.files:
 			flash('No file part')
-			return redirect(request.url)
 		file = request.files['file']
 		# if user does not select file, browser also
 		# submit an empty part without filename
