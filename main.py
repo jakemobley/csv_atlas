@@ -14,6 +14,18 @@ def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in config.ALLOWED_EXTENSIONS
 
 
+def store_df(filename):
+	# Return 404 if path doesn't exist
+	if not os.path.exists(config.FILE_DIR):
+		return abort(412, "problem with file directory")
+	if not os.path.exists(config.DF_DIR):
+		return abort(412, "problem with serialized df directory")
+	full_filepath = Path(f"{config.FILE_DIR}/{filename}")
+	file_stem = full_filepath.stem
+	df = pd.read_csv(full_filepath)
+	df.to_parquet(f'{config.DF_DIR}/{file_stem}.parquet.gzip', compression='gzip')
+
+
 @app.route('/')
 def file_landing():
 	# Show directory contents
@@ -46,9 +58,23 @@ def download_file(file):
 @app.route('/display/<file>')
 def display_file(file):
 	# Return 404 if path doesn't exist
-	if not os.path.exists(config.FILE_DIR):
-		return abort(412, "problem with file directory")
 	if file not in os.listdir(config.FILE_DIR):
+		abort(404,"file not found.")  # TODO: add custom error handlers
+	# create df to display
+	file = file.split(".")[0]
+	df_filepath = Path(f"{config.DF_DIR}/{file}.parquet.gzip")
+	df = pd.read_parquet(df_filepath)
+	# html_df = df.to_html()
+	shape = df.shape
+	return render_template('file.html', file=file, shape=df.shape, table=df)
+
+
+"""
+
+@app.route('/display/<file>')
+def display_file(file):
+	# Return 404 if path doesn't exist
+	if file not in os.listdir(config.DF_DIR):
 		return redirect(url_for('file_list'))  # add custom error handlers
 	# create df to display
 	full_filepath = Path(f"{config.FILE_DIR}/{file}")
@@ -57,6 +83,7 @@ def display_file(file):
 	shape = df.shape
 	return render_template('file.html', file=file, shape=df.shape, table=html_df)
 
+"""
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
@@ -73,7 +100,8 @@ def upload_file():
 		if file and allowed_file(file.filename):
 			filename = secure_filename(file.filename)
 			file.save(Path(f"{app.config['UPLOAD_FOLDER']}/{filename}"))
-			return redirect(url_for('upload_file', filename=filename))
+			store_df(filename)
+			return redirect(url_for('upload_file', filename=filename))  # TODO: need success page
 	return render_template('upload.html')
 
 
