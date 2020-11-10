@@ -26,7 +26,7 @@ def directory_lookup():
         abort(412, "problem reaching file directory; check config")
 
 
-def get_page_of_data(df, offset=0, per_page=1000):
+def get_page_of_data(df, offset=0, per_page=10000):
     return df.iloc[offset: offset + per_page]
 
 
