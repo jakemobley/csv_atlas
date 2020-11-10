@@ -19,18 +19,6 @@ def get_page_of_data(df, offset=0, per_page=1000):
     return df.iloc[offset: offset + per_page]
 
 
-def store_df(filename):
-    # Return 404 if path doesn't exist
-    if not os.path.exists(config.FILE_DIR):
-        return abort(412, "problem with file directory")
-    if not os.path.exists(config.DF_DIR):
-        return abort(412, "problem with serialized df directory")
-    full_filepath = Path(f"{config.FILE_DIR}/{filename}")
-    file_stem = full_filepath.stem
-    df = pd.read_csv(full_filepath)
-    df.to_parquet(f'{config.DF_DIR}/{file_stem}.parquet.gzip', compression='gzip')
-
-
 @app.route('/')
 def file_landing():
     # Show directory contents
@@ -65,12 +53,9 @@ def display_file(file):
     # Return 404 if path doesn't exist
     if file not in os.listdir(config.FILE_DIR):
         abort(404, "file not found.")  # TODO: add custom error handlers
-    # create df to display
-    file = file.split(".")[0]
-    df_filepath = Path(f"{config.DF_DIR}/{file}.parquet.gzip")
-    df = pd.read_parquet(df_filepath)
-    shape = df.shape
-    """pagination across the nation"""
+    fullpath = Path(f"{config.FILE_DIR}/{file}")
+    df = pd.read_csv(fullpath)
+    '''pagination across the nation'''
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     total = len(df)
     page_df = get_page_of_data(df, offset=offset, per_page=per_page)
@@ -97,7 +82,6 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(Path(f"{app.config['UPLOAD_FOLDER']}/{filename}"))
-            store_df(filename)
             return redirect(url_for('upload_file', filename=filename))  # TODO: need success page
     return render_template('upload.html')
 

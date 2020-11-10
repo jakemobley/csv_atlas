@@ -43,8 +43,7 @@ h2 {
     font-size: 150%;
 }
 
-.pagination > li > a
-{
+.pagination > li > a {
     background-color: transparent;
     color: #3ddeed;
     border-color: #3ddeed;
