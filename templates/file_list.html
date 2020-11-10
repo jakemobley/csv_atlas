@@ -1,17 +1,15 @@
 {% extends 'layout.html' %}
 {% block body %}
 <center>
-<div>
-    <h1>List of CSV Files</h1>
-<ul style="list-style-type:none;">
-    {% for file in files %}
-    <li>
-        <a href="{{ '/' + file }}">
-            <input type="submit" name=actions value={{file}}>
-        </a>
-    </li>
-</ul>
-</div>
+    <div>
+        <a href="/upload" class="btn btn-primary btn-lg" role="button">Upload Files</a>
+        <br><br>
+        <h3>or select from below</h3>
+        <br>
+        {% for file in files %}
+        <a href="{{ '/' + file }}" class="btn btn-outline-primary btn-lg styled" role="button">{{file}}</a>
+        <br><br>
+        {% endfor %}
+    </div>
 </center>
-    {% endfor %}
 {% endblock %}

@@ -39,7 +39,7 @@ def file_list(file):
 	if not os.path.exists(config.FILE_DIR):
 		return abort(412, "problem with file directory")
 	if file not in os.listdir(config.FILE_DIR):
-		return redirect(url_for('file_list'))  # add custom error handlers
+		abort(404, "file not found.")  # add custom error handlers
 	return render_template('actions.html', file=file)
 
 

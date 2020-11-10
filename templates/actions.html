@@ -3,12 +3,10 @@
 <center>
     <div>
         <h1>{{file}}</h1>
-        <a href="{{ '/download/' + file }}">
-            <input type="submit" name=download value=Download>
-        </a> <br>
-        <a href="{{ '/display/' + file }}">
-            <input type="submit" name=display value=Display>
-        </a>
+        <br>
+        <a style="margin-right: 10px;" href="{{ '/display/' + file }}" class="btn btn-outline-primary btn-lg styled" role="button">Display</a>
+        <a href="{{ '/download/' + file }}"
+                   class="btn btn-outline-primary btn-lg styled" role="button">Download</a>
     </div>
 </center>
 {% endblock %}
