@@ -1,7 +1,8 @@
 body {
-	background: #040522;
+	background: #171717;
 	height: 100%;
 	margin: auto;
+	color: #195da4;
 }
 
 .styled {
@@ -23,6 +24,27 @@ h3 {
 h2 {
 	color: #3ddeed;
 	font-size: 24px;
+}
+
+.pagination-page-info {
+    padding: .6em;
+    padding-left: 0;
+    width: 40em;
+    margin: .5em;
+    margin-left: 0;
+    font-size: 12px;
+}
+
+.pagination-page-info b {
+    color: #3ddeed;
+    background: #171717;
+    padding-left: 2px;
+    padding: .1em .25em;
+    font-size: 150%;
+}
+
+.page-link {
+    background-color: #171717;
 }
 
 table, th, td {
