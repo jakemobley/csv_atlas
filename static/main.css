@@ -26,6 +26,10 @@ h2 {
 	font-size: 24px;
 }
 
+.pagination {
+   justify-content: center;
+}
+
 .pagination-page-info {
     padding: .6em;
     padding-left: 0;
@@ -56,10 +60,20 @@ h2 {
     border-color: #3ddeed;
 }
 
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover,
 .page-item.active .page-link {
     color: #171717;
     background-color: #3ddeed;
     border-color: #3ddeed;
+}
+
+{
+    color: #5a5a5a;
+    background-color: #eee;
+    border-color: #ddd;
 }
 
 table, th, td {

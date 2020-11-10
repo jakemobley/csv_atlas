@@ -81,8 +81,8 @@ def display_file(file):
     # pagination
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     total = len(df)
-    page_df = get_page_of_data(df, offset=offset, per_page=per_page)
-    pagination = Pagination(page=page, per_page=per_page, total=total,
+    page_df = get_page_of_data(df, offset=offset, per_page=1000)
+    pagination = Pagination(page=page, per_page=1000, total=total,
                             css_framework='bootstrap4')
     # create html table from df and display
     html_df = page_df.to_html()

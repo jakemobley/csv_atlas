@@ -5,12 +5,13 @@
     <div class="box">
         <h3>{{file}}</h3>
         <p>{{shape[0]}} rows, {{shape[1]}} columns</p>
-        <br>
         {{pagination.info}}
         <br>
         <a href="{{ '/download/' + file }}"
            class="btn btn-outline-primary btn-lg styled" role="button">Download</a>
         <br><br><br>
+        {{pagination.links}}
+        <br>
         {{table|safe}}
         <br><br>
         {{pagination.links}}
