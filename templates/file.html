@@ -2,10 +2,15 @@
 {% block body %}
 <body>
 <center>
-    <div>
-        <h1>{{file}}</h1>
-        <h3>shape: {{shape}}</h3>
+    <div class="box">
+        <h3>{{file}}.csv</h3>
+        <p>{{shape[0]}} rows, {{shape[1]}} columns</p>
+        <br>
+        <a href="{{ '/download/' + file }}"
+           class="btn btn-outline-primary btn-lg styled" role="button">Download</a>
+        <br><br><br>
         {{table|safe}}
+        <br><br>
     </div>
 </center>
 {% endblock %}

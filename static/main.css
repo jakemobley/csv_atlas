@@ -1,5 +1,7 @@
 body {
-    background: #040522;
+	background: #040522;
+	height: 100%;
+	margin: auto;
 }
 
 .styled {
@@ -8,16 +10,21 @@ body {
 }
 
 h1 {
-    color: #3ddeed;
-    font-variant-caps: all-small-caps;
-    font-size: 46px;
+	color: #3ddeed;
+	font-variant-caps: all-small-caps;
+	font-size: 46px;
 }
 
 h3 {
-  color: #3ddeed;
-  font-size: 36px;
+	color: #3ddeed;
+	font-size: 36px;
+}
 
-li {
-  color: #3ddeed;
-  font-size: 50px;
+h2 {
+	color: #3ddeed;
+	font-size: 24px;
+}
+
+table, th, td {
+  border: 1px solid #3ddeed;
 }

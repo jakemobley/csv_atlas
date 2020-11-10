@@ -64,9 +64,9 @@ def display_file(file):
 	file = file.split(".")[0]
 	df_filepath = Path(f"{config.DF_DIR}/{file}.parquet.gzip")
 	df = pd.read_parquet(df_filepath)
-	# html_df = df.to_html()
+	html_df = df.to_html()
 	shape = df.shape
-	return render_template('file.html', file=file, shape=df.shape, table=df)
+	return render_template('file.html', file=file, shape=df.shape, table=html_df)
 
 
 """
