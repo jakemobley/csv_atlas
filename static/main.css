@@ -43,8 +43,24 @@ h2 {
     font-size: 150%;
 }
 
-.page-link {
-    background-color: #171717;
+.pagination > li > a
+{
+    background-color: transparent;
+    color: #3ddeed;
+    border-color: #3ddeed;
+}
+
+.page-item.disabled .page-link {
+    z-index: 1;
+    color: #3ddeed;
+    background-color: transparent;
+    border-color: #3ddeed;
+}
+
+.page-item.active .page-link {
+    color: #171717;
+    background-color: #3ddeed;
+    border-color: #3ddeed;
 }
 
 table, th, td {
