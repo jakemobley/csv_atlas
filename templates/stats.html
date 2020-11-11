@@ -2,13 +2,10 @@
 {% block body %}
 <body>
 <center>
+    <h3>count of year stats from</h3>
     <h3>{{file}}</h3>
-    <p>{{shape[0]}} rows, {{shape[1]}} columns</p>
     {{pagination.info}}
     <br>
-    <a href="{{ '/download/' + file }}"
-       class="btn btn-outline-primary btn-lg styled" role="button">Download</a>
-    <br><br><br>
     {{pagination.links}}
     <br>
     {{table|safe}}

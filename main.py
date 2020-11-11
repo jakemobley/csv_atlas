@@ -18,6 +18,16 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in config.ALLOWED_EXTENSIONS
 
 
+def format_date(df):
+    for col in df.columns:
+        if df[col].dtype == 'object':
+            try:
+                df[col] = pd.to_datetime(df[col])
+            except ValueError:
+                pass
+    return df
+
+
 def directory_lookup():
     try:
         assert os.path.exists(config.FILE_DIR)
@@ -28,6 +38,25 @@ def directory_lookup():
 
 def get_page_of_data(df, offset=0, per_page=10000):
     return df.iloc[offset: offset + per_page]
+
+
+def run_stats(df):
+    # find columns with datetime data types
+    date_cols = df.select_dtypes(include=['datetime64'])
+    new_df = pd.DataFrame()
+    # loop through datetime column
+    for col in date_cols:
+        # convert datetime objects to just years
+        df[col] = df[col].dt.year
+        # create a series with a count of values for each year
+        series = df[col].value_counts().reset_index().rename(columns={'index': f'{col}',
+                                                                          'date': f'Count {col} Year'})
+        series.sort_values(by=[f'{col}'], inplace=True)
+        # add years in column as well as counts for each year to a new df
+        new_df[col] = series[col]
+        new_df[f"Count {col} Year"] = series[f"Count {col} Year"]
+    print("hello")
+    return new_df
 
 
 @app.route('/')
@@ -73,7 +102,7 @@ def display_file(file):
 
     df = None
     try:
-        df = pd.read_csv(fullpath)
+        df = pd.read_csv(fullpath, parse_dates=True)
     except Exception as e:
         logger.error(e)
         abort(412, "Error parsing CSV file. Please check the file and try again.")
@@ -87,6 +116,36 @@ def display_file(file):
     # create html table from df and display
     html_df = page_df.to_html()
     return render_template('file.html', file=file, shape=df.shape, table=html_df, page=page, per_page=per_page,
+                           pagination=pagination)
+
+
+@app.route('/stats/<file>')
+def display_stats(file):
+    directory_lookup()
+    try:
+        assert file in os.listdir(config.FILE_DIR)
+    except Exception as e:
+        logger.error(e)
+        abort(404, "file not found in file directory")
+    fullpath = Path(f"{config.FILE_DIR}/{file}")
+
+    df = None
+    try:
+        df = pd.read_csv(fullpath, parse_dates=True)
+    except Exception as e:
+        logger.error(e)
+        abort(412, "Error parsing CSV file. Please check the file and try again.")
+    df = format_date(df)
+    stats_df = run_stats(df)
+    # pagination
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    total = len(df)
+    page_df = get_page_of_data(stats_df, offset=offset, per_page=1000)
+    pagination = Pagination(page=page, per_page=1000, total=total,
+                            css_framework='bootstrap4')
+    html_df = page_df.to_html(index=False)
+    # create html table from df and display
+    return render_template('stats.html', file=file, table=html_df, page=page, per_page=per_page,
                            pagination=pagination)
 
 
