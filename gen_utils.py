@@ -12,9 +12,9 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in config.ALLOWED_EXTENSIONS
 
 
-def directory_lookup():
+def directory_lookup(directory=config.FILE_DIR):
     try:
-        assert os.path.exists(config.FILE_DIR)
+        assert os.path.exists(directory)
     except Exception as e:
         logger.error(e)
         abort(412, "problem reaching file directory; check config")
