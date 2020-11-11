@@ -1,8 +1,8 @@
 import pytest
 import logging
-from pytest import raises
+# from pytest import raises
 import pandas as pd
-import main
+# import main
 import config
 import gen_utils as gu
 from pathlib import Path
@@ -41,5 +41,4 @@ def test_format_date():
     mock_csv = Path(r"C:\Users\jakem\projects\web-dev\csv_atlas\csv_atlas\tests\mock_data\mock.csv")
     df = pd.read_csv(mock_csv)
     formatted_df = gu.format_date(df)
-    a = formatted_df['date'].dtype
     assert formatted_df['date'].dtype == "datetime64[ns]"
