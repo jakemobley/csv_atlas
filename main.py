@@ -18,6 +18,21 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in config.ALLOWED_EXTENSIONS
 
 
+def directory_lookup():
+    try:
+        assert os.path.exists(config.FILE_DIR)
+    except Exception as e:
+        logger.error(e)
+        abort(412, "problem reaching file directory; check config")
+
+
+def fill_in_the_blanks(df):
+    state_cols = [i for i in list(df.columns) if i in ['STATE', 'state', 'State']]
+    for state_col in state_cols:
+        df[state_col].fillna("BLANK", inplace=True)
+    return df
+
+
 def format_date(df):
     for col in df.columns:
         if df[col].dtype == 'object':
@@ -26,14 +41,6 @@ def format_date(df):
             except ValueError:
                 pass
     return df
-
-
-def directory_lookup():
-    try:
-        assert os.path.exists(config.FILE_DIR)
-    except Exception as e:
-        logger.error(e)
-        abort(412, "problem reaching file directory; check config")
 
 
 def get_page_of_data(df, offset=0, per_page=10000):
@@ -111,6 +118,7 @@ def display_file(file):
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     total = len(df)
     page_df = get_page_of_data(df, offset=offset, per_page=1000)
+    page_df = fill_in_the_blanks(page_df)
     pagination = Pagination(page=page, per_page=1000, total=total,
                             css_framework='bootstrap4')
     # create html table from df and display
