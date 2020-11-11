@@ -6,6 +6,7 @@ from pathlib import Path
 import pandas as pd
 import config
 import logging
+import gen_utils as gu
 
 logger = logging.getLogger()
 
@@ -14,63 +15,17 @@ app.config['UPLOAD_FOLDER'] = Path(config.FILE_DIR)
 app.secret_key = config.SECRET_KEY
 
 
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in config.ALLOWED_EXTENSIONS
-
-
-def directory_lookup():
-    try:
-        assert os.path.exists(config.FILE_DIR)
-    except Exception as e:
-        logger.error(e)
-        abort(412, "problem reaching file directory; check config")
-
-
-def format_date(df):
-    for col in df.columns:
-        if df[col].dtype == 'object':
-            try:
-                # infer_datetime_format is so very much faster.
-                df[col] = pd.to_datetime(df[col], infer_datetime_format=True)
-            except ValueError:
-                pass
-    return df
-
-
-def get_page_of_data(df, offset=0, per_page=10000):
-    return df.iloc[offset: offset + per_page]
-
-
-def run_stats(df):
-    # find columns with datetime data types
-    date_cols = df.select_dtypes(include=['datetime64'])
-    new_df = pd.DataFrame()
-    # loop through datetime column
-    for col in date_cols:
-        # convert datetime objects to just years
-        df[col] = df[col].dt.year
-        # create a series with a count of values for each year
-        series = df[col].value_counts().reset_index().rename(columns={'index': f'{col}',
-                                                                          'date': f'Count {col} Year'})
-        series.sort_values(by=[f'{col}'], inplace=True)
-        # add years in column as well as counts for each year to a new df
-        new_df[col] = series[col]
-        new_df[f"Count {col} Year"] = series[f"Count {col} Year"]
-    print("hello")
-    return new_df
-
-
 @app.route('/')
 def landing():
-    directory_lookup()
+    gu.directory_lookup()
     # Show directory contents
     files = os.listdir(config.FILE_DIR)
     return render_template('file_list.html', files=files)
 
 
 @app.route('/<file>')
-def file_list(file):
-    directory_lookup()
+def file_actions(file):
+    gu.directory_lookup()
     try:
         assert file in os.listdir(config.FILE_DIR)
     except Exception as e:
@@ -81,25 +36,14 @@ def file_list(file):
 
 @app.route('/download/<file>')
 def download_file(file):
-    directory_lookup()
-    try:
-        assert file in os.listdir(config.FILE_DIR)
-    except Exception as e:
-        logger.error(e)
-        abort(404, "file not found in file directory")
-    full_filepath = Path(f"{config.FILE_DIR}/{file}")
-    return send_file(full_filepath)
+    fullpath = gu.get_fullpath(file)
+    return send_file(fullpath)
 
 
 @app.route('/display/<file>')
 def display_file(file):
-    directory_lookup()
-    try:
-        assert file in os.listdir(config.FILE_DIR)
-    except Exception as e:
-        logger.error(e)
-        abort(404, "file not found in file directory")
-    fullpath = Path(f"{config.FILE_DIR}/{file}")
+    # make sure file and path exist
+    fullpath = gu.get_fullpath(file)
 
     df = None
     try:
@@ -111,10 +55,11 @@ def display_file(file):
     # pagination
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     total = len(df)
-    page_df = get_page_of_data(df, offset=offset, per_page=1000)
+    page_df = gu.get_page_of_data(df, offset=offset, per_page=1000)
     page_df['state'].fillna("BLANK", inplace=True)
     pagination = Pagination(page=page, per_page=1000, total=total,
                             css_framework='bootstrap4')
+
     # create html table from df and display
     html_df = page_df.to_html()
     return render_template('file.html', file=file, shape=df.shape, table=html_df, page=page, per_page=per_page,
@@ -123,30 +68,30 @@ def display_file(file):
 
 @app.route('/stats/<file>')
 def display_stats(file):
-    directory_lookup()
-    try:
-        assert file in os.listdir(config.FILE_DIR)
-    except Exception as e:
-        logger.error(e)
-        abort(404, "file not found in file directory")
-    fullpath = Path(f"{config.FILE_DIR}/{file}")
+    # make sure file and path exist
+    fullpath = gu.get_fullpath(file)
 
+    # read df and run stats
     df = None
     try:
         df = pd.read_csv(fullpath, parse_dates=True)
     except Exception as e:
         logger.error(e)
         abort(412, "Error parsing CSV file. Please check the file and try again.")
-    df = format_date(df)
-    stats_df = run_stats(df)
+
+    # format and run date statistics
+    df = gu.format_date(df)
+    stats_df = gu.run_stats(df)
+
     # pagination
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     total = len(df)
-    page_df = get_page_of_data(stats_df, offset=offset, per_page=1000)
+    page_df = gu.get_page_of_data(stats_df, offset=offset, per_page=1000)
     pagination = Pagination(page=page, per_page=1000, total=total,
                             css_framework='bootstrap4')
-    html_df = page_df.to_html(index=False)
+
     # create html table from df and display
+    html_df = page_df.to_html(index=False)
     return render_template('stats.html', file=file, table=html_df, page=page, per_page=per_page,
                            pagination=pagination)
 
@@ -164,9 +109,10 @@ def upload_file():
             flash('No selected file')
             return redirect(request.url)
 
-        if file and allowed_file(file.filename):
+        # do the thing
+        if file and gu.allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            directory_lookup()
+            gu.directory_lookup()
             try:
                 file.save(Path(f"{app.config['UPLOAD_FOLDER']}/{filename}"))
             except Exception as e:
