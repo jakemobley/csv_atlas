@@ -30,7 +30,8 @@ def format_date(df):
     for col in df.columns:
         if df[col].dtype == 'object':
             try:
-                df[col] = pd.to_datetime(df[col])
+                # infer_datetime_format is so very much faster.
+                df[col] = pd.to_datetime(df[col], infer_datetime_format=True)
             except ValueError:
                 pass
     return df
