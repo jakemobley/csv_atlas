@@ -7,6 +7,7 @@ from pathlib import Path
 
 logger = logging.getLogger()
 
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in config.ALLOWED_EXTENSIONS
 
@@ -27,6 +28,7 @@ def get_fullpath(file):
         abort(404, "file not found in file directory")
     fullpath = Path(f"{config.FILE_DIR}/{file}")
     return fullpath
+
 
 def format_date(df):
     for col in df.columns:
