@@ -26,13 +26,6 @@ def directory_lookup():
         abort(412, "problem reaching file directory; check config")
 
 
-def fill_in_the_blanks(df):
-    state_cols = [i for i in list(df.columns) if i in ['STATE', 'state', 'State']]
-    for state_col in state_cols:
-        df[state_col].fillna("BLANK", inplace=True)
-    return df
-
-
 def format_date(df):
     for col in df.columns:
         if df[col].dtype == 'object':
@@ -118,7 +111,7 @@ def display_file(file):
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     total = len(df)
     page_df = get_page_of_data(df, offset=offset, per_page=1000)
-    page_df = fill_in_the_blanks(page_df)
+    page_df['state'].fillna("BLANK", inplace=True)
     pagination = Pagination(page=page, per_page=1000, total=total,
                             css_framework='bootstrap4')
     # create html table from df and display
