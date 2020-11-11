@@ -63,3 +63,16 @@ def test_run_stats_success():
     formatted_df = gu.format_date(df)
     stats = gu.run_stats(formatted_df)
     assert_frame_equal(stats.reset_index(drop=True), expected_stats.reset_index(drop=True))
+
+
+@pytest.mark.unittest
+def test_run_stats_failure():
+    expected_stats = pd.read_csv(rf"{config.MOCK_DATA_DIR}\expected_stats.csv")
+    mock_csv = Path(r"C:\Users\jakem\projects\web-dev\csv_atlas\csv_atlas\tests\mock_data\mock.csv")
+    df = pd.read_csv(mock_csv)
+    formatted_df = gu.format_date(df)
+    stats = gu.run_stats(formatted_df)
+    try:
+        assert_frame_equal(stats.reset_index(drop=True), df.reset_index(drop=True))
+    except AssertionError:
+        pass
