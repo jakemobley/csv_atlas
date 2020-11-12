@@ -20,13 +20,13 @@ def directory_lookup(directory=config.FILE_DIR):
         abort(412, "problem reaching file directory; check config")
 
 
-def get_fullpath(file):
+def get_fullpath(file, directory=config.FILE_DIR):
     try:
-        assert file in os.listdir(config.FILE_DIR)
+        assert file in os.listdir(directory)
     except Exception as e:
         logger.error(e)
         abort(404, "file not found in file directory")
-    fullpath = Path(f"{config.FILE_DIR}/{file}")
+    fullpath = Path(f"{directory}/{file}")
     return fullpath
 
 
