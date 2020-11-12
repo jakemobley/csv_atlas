@@ -60,5 +60,4 @@ def run_stats(df):
         # add years in column as well as counts for each year to a new df
         new_df[col] = series[col]
         new_df[f"Count {col} Year"] = series[f"Count {col} Year"]
-    print("hello")
     return new_df
