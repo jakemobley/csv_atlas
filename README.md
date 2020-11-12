@@ -11,7 +11,7 @@ Dependencies are python3 and pip.
 
 ### Clone repository to desired location
 ```
-git clone https://github.com/jakemobley/csv-atlas.git
+git clone https://github.com/jakemobley/csv_atlas.git
 ```
 
 ### Setup virtual environment
