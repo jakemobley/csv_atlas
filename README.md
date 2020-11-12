@@ -45,7 +45,7 @@ localhost:5000/
 
 Make sure to visit config.py and select which folders you would like to use to store your files.
 
-Change/add routes and templates and customize to your heart's unbridled content. My main.css file is located in /static and is linked to layout.html.
+Change/add routes and customize accordingly. My main.css file is located in /static and is linked to layout.html.
 
 Deployment should be fairly easy using the services of your choice. I tested deployments using App Engine on 
 Google Cloud Platform and linux servers using nginx and gunicorn.
