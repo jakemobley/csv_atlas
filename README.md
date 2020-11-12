@@ -2,7 +2,7 @@
 Upload, display, and download CSV files to your heart's content. 
 If your csv has a 'state' column, missing entries will be displayed with BLANK.
 If any columns in your csv can be typecast as pandas datetime datatypes, the "Stats" button will display counts
-for all entries in the row with the same year value.
+for all entries in the column with the same year value.
 
 ## GETTING STARTED
 
