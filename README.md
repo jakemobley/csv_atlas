@@ -1,33 +1,37 @@
-# Flask App Template
-Basic skeleton to save time on new projects.
+# CSV Atlas
+Upload, display, and download CSV files to your heart's content. 
+If your csv has a 'state' column, missing entries will be displayed with BLANK.
+If any columns in your csv can be typecast as pandas datetime datatypes, the "Stats" button will display counts
+for all entries in the row with the same year value.
 
 ## GETTING STARTED
 
 These instructions will get you a copy of the project up and running locally.
-
-dependencies are python3 and pip.
+Dependencies are python3 and pip.
 
 ### Clone repository to desired location
 ```
-git clone https://github.com/jakemobley/flask-template.git
+git clone https://github.com/jakemobley/csv-atlas.git
 ```
 
 ### Setup virtual environment
 
-Lately for basic projects I have been using pipenv since it doesn't require naming or frequent sourcing, but venv is sometimes easier.
+Lately for basic projects I have been using pipenv since it doesn't require naming or frequent sourcing, but venv is 
+sometimes easier.
 ```
 python -m venv whatever_env
 ```
 Don't forget to activate.
 
-From there you can check out this resource for some common setup items: https://docs.python-guide.org/dev/virtualenvs/ or just use whatever virtual environment you want.
+From there you can check out this resource for some common setup items: 
+https://docs.python-guide.org/dev/virtualenvs/ or just use whatever virtual environment you want.
 
-### Install Flask (if not using pipenv just pip install)
+### Install requirements
 ```
-pip install flask
+pip install -r requirements.txt
 ```
 
-### Initialize Flask development server if you want
+### Initialize Flask development server if you want; may need 'python3' depending on your interpreter
 ```
 python main.py
 ```
@@ -41,7 +45,8 @@ localhost:5000/
 
 Change/add routes and templates and customize to your heart's unbridled content. My main.css file is located in /static and is linked to layout.html.
 
-Deployment should be fairly easy using the services of your choice. I tested deployments using App Engine on Google Cloud Platform and linux servers using nginx and gunicorn.
+Deployment should be fairly easy using the services of your choice. I tested deployments using App Engine on 
+Google Cloud Platform and linux servers using nginx and gunicorn.
 
 ## FAQ / CONTACT / TROUBLESHOOT
 

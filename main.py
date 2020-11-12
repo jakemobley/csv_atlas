@@ -50,7 +50,7 @@ def display_file(file):
         df = pd.read_csv(fullpath, parse_dates=True)
     except Exception as e:
         logger.error(e)
-        abort(412, "Error parsing CSV file. Please check the file and try again.")
+        abort(500, "Error parsing CSV file. Please check the file and try again.")
 
     # pagination
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
@@ -77,7 +77,7 @@ def display_stats(file):
         df = pd.read_csv(fullpath, parse_dates=True)
     except Exception as e:
         logger.error(e)
-        abort(412, "Error parsing CSV file. Please check the file and try again.")
+        abort(500, "Error parsing CSV file. Please check the file and try again.")
 
     # format and run date statistics
     df = gu.format_date(df)
