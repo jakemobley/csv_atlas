@@ -43,6 +43,8 @@ localhost:5000/
 
 ## CUSTOMIZE / ADDITIONAL
 
+Make sure to visit config.py and select which folders you would like to use to store your files.
+
 Change/add routes and templates and customize to your heart's unbridled content. My main.css file is located in /static and is linked to layout.html.
 
 Deployment should be fairly easy using the services of your choice. I tested deployments using App Engine on 
