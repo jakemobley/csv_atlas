@@ -17,7 +17,7 @@ def directory_lookup(directory=config.FILE_DIR):
         assert os.path.exists(directory)
     except Exception as e:
         logger.error(e)
-        abort(412, "problem reaching file directory; check config")
+        abort(412, "problem reaching file directory; assign in config.py")
 
 
 def get_fullpath(file, directory=config.FILE_DIR):
