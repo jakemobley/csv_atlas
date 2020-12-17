@@ -65,6 +65,7 @@ def display_file(file):
     return render_template('file.html', file=file, shape=df.shape, table=html_df, page=page, per_page=per_page,
                            pagination=pagination)
 
+
 @app.route('/stats/<file>')
 def display_stats(file):
     # make sure file and path exist
